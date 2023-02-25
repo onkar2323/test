@@ -93,7 +93,7 @@ app.post("/login", async (req, res) => {
                 { user_id: user._id, email },
                 process.env.TOKEN_KEY,
                 {
-                    expiresIn: "2h",
+                    expiresIn: 30,
                 }
             );
 
@@ -152,8 +152,8 @@ app.delete("/user/post/:id", auth, async (req, res) => {
 
 
 app.get("/user/posts", auth, async (req, res) => {
-    const perpage = req.params.perpage;
-    const page = req.params.page;
+    const perpage = req.query.perpage;
+    const page = req.query.page;
 
     const {email} = req.body;
     const posts = await Post.find({userEmail:email}).limit(perpage).skip((perpage * page) - perpage);
@@ -163,8 +163,9 @@ app.get("/user/posts", auth, async (req, res) => {
 
 app.get("/user/sortedposts", auth, async (req, res) => {
 
-    const perpage = req.params.perpage;
-    const page = req.params.page;
+    const perpage = req.query.perpage;
+    const page = req.query.page;
+    console.log(perpage,page);
 
     const {email} = req.body;
     const posts = await Post.find({userEmail:email}).sort({date:-1}).limit(perpage).skip((perpage * page) - perpage);
